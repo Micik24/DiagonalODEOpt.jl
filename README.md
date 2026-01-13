@@ -6,16 +6,16 @@ using adjoint Krylov subspace methods.**
 This package provides an efficient framework for optimizing diagonal parameters
 of large-scale linear ordinary differential equations of the form:
 
-\[
+$$
 x'(t) = (A₀ + \mathrm{diag}(d(θ)))\,x(t) + f
-\]
+$$
 
 where:
 
-- **A₀ ∈ ℝⁿˣⁿ** is a fixed base operator,
-- **θ ∈ ℝⁿ** are trainable diagonal parameters,
-- **d(θ)** is a monotone parametrization enforcing stability,
-- **f ∈ ℝⁿˣˢ** are constant forcing vectors (many right-hand sides).
+- **$A₀ \in \mathbb{R}^{n \times n}$** is a fixed base operator,
+- **$θ \in \mathbb{R}^n$** are trainable diagonal parameters,
+- **$d(θ)$** is a monotone parametrization enforcing stability,
+- **$f \in \mathbb{R}^{n \times s}$** are constant forcing vectors (many right-hand sides).
 
 The implementation combines:
 
@@ -103,24 +103,24 @@ using CUDA
 
 We consider a linear ODE system:
 
-\[
-x'(t) = A x(t) + f,\qquad
+$$
+x'(t) = A x(t) + f, \qquad
 A = A₀ + \mathrm{diag}(d(θ)),
-\]
+$$
 
-with constant forcing **f**.
+with constant forcing $f$.
 
-The exact solution at time **T** is:
+The exact solution at time $T$ is:
 
-\[
-x(T) = \exp(TA)x(0) + T·φ₁(TA)f
-\]
+$$
+x(T) = \exp(TA)x(0) + T \cdot φ₁(TA) f
+$$
 
 where:
 
-\[
-φ₁(A) = A^{-1} (\exp(A) − I).
-\]
+$$
+φ₁(A) = A^{-1}(\exp(A) - I).
+$$
 
 The action of these operators is approximated using Krylov subspaces
 constructed via batched Arnoldi iterations on GPU.
@@ -129,20 +129,21 @@ constructed via batched Arnoldi iterations on GPU.
 
 ## Objective and gradient
 
-A generic loss **L(x(T))** is evaluated at final time **T**
+A generic loss $L(x(T))$ is evaluated at final time $T$
 (e.g. cross-entropy, regression loss, or custom objective).
 
 The gradient with respect to diagonal parameters is computed via an adjoint method:
 
-\[
-∂L/∂θ = \int Λ(t) ⊙ X(t)\,dt · (∂d/∂θ),
-\]
+$$
+\frac{\partial L}{\partial θ}
+= \int Λ(t) \odot X(t)\,dt \cdot \left(\frac{\partial d}{\partial θ}\right),
+$$
 
 where:
 
-- **Λ(t)** is the adjoint solution,
-- **X(t)** is the forward forcing contribution,
-- **⊙** denotes elementwise multiplication.
+- **$Λ(t)$** is the adjoint solution,
+- **$X(t)$** is the forward forcing contribution,
+- **$\odot$** denotes elementwise multiplication.
 
 Time integration is performed using user-provided quadrature weights.
 
@@ -150,21 +151,21 @@ Time integration is performed using user-provided quadrature weights.
 
 ## Diagonal parametrization
 
-The mapping from parameters **θ** to diagonal entries **d(θ)** is modular.
+The mapping from parameters $θ$ to diagonal entries $d(θ)$ is modular.
 
 Two parametrizations are provided:
 
 ### ExpParam()
 
-\[
+$$
 d(θ) = -\exp(θ)
-\]
+$$
 
 ### SoftplusParam()
 
-\[
+$$
 d(θ) = -\mathrm{softplus}(θ)
-\]
+$$
 
 Custom parametrizations can be added by implementing:
 
@@ -177,7 +178,7 @@ dtheta_from_ddiag(param, θ)
 
 ## Optimization
 
-The package includes a GPU-safe implementation of Adam, used to optimize **θ**
+The package includes a GPU-safe implementation of Adam, used to optimize $θ$
 based on adjoint gradients.
 
 The optimization loop is intentionally decoupled from gradient computation:
@@ -230,7 +231,7 @@ param = SoftplusParam()
 
 - Krylov projections are performed entirely on GPU.
 - Small Hessenberg matrices are processed on CPU using real Schur decomposition.
-- φ₁ is evaluated via stable block back-substitution, not explicit inversion.
+- $φ₁$ is evaluated via stable block back-substitution, not explicit inversion.
 - Numerically inactive trajectories are automatically masked.
 - All computations are performed in Float64 for stability.
 
