@@ -1,0 +1,11 @@
+name = "LinearODEAdjointGPU"
+uuid = "9df66042-a226-412b-ab5d-822e03e260d7"
+version = "0.1.0"
+authors = ["Maciej Wajda <maciejwajda01@gmail.com>"]
+
+[deps]
+BatchedKrylovGPU = "3eb3e37c-8eff-490c-b5ac-746a2614471e"
+CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+
+[compat]
+BatchedKrylovGPU = "0.1.0"
