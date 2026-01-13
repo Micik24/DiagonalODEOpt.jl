@@ -1,7 +1,7 @@
 # DiagonalODEOpt.jl
 
-**GPU-accelerated optimization of diagonal parameters in linear ODE systems  
-using adjoint Krylov subspace methods.**
+**GPU-accelerated AI-driven optimization of diagonal
+parameters in linear ODE systems using adjoint Krylov methods.**
 
 This package provides an efficient framework for optimizing diagonal parameters
 of large-scale linear ordinary differential equations of the form:
